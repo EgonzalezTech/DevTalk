@@ -49,15 +49,40 @@ render_header($topic['title']);
 
         <div class="topic-body"><?= $topic['body'] ?></div>
 
-        <?php if ($user): ?>
+
+        <?php if ($user && (int) $topic['user_id'] === (int) $user['id']): ?>
             <div class="mt-3 d-flex gap-2">
+
                 <a class="btn btn-sm btn-outline-secondary"
-                    href="edit_topic.php?id=<?= (int) $topic['id'] ?>">Edit</a>
-                <a class="btn btn-sm btn-outline-danger"
-                    href="delete_topic.php?id=<?= (int) $topic['id'] ?>"
-                    onclick="return confirm('Delete this topic?')">Delete</a>
+                    href="edit_topic.php?id=<?= (int) $topic['id'] ?>">
+                    Edit
+                </a>
+
+                <form method="post"
+                    action="delete_topic.php"
+                    onsubmit="return confirm('Delete this topic?')">
+
+                    <input type="hidden"
+                        name="id"
+                        value="<?= (int) $topic['id'] ?>">
+
+                    <input type="hidden"
+                        name="csrf_token"
+                        value="<?= htmlspecialchars(
+                                    csrf_token(),
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>">
+
+                    <button type="submit"
+                        class="btn btn-sm btn-outline-danger">
+                        Delete
+                    </button>
+                </form>
+
             </div>
         <?php endif; ?>
+
     </div>
 </article>
 
